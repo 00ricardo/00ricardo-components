@@ -7,6 +7,6 @@ export default {
 
 export const _VersioningSystem = {
     args: {
-        'dataType': 'String',
+        'open': true
     },
 };
