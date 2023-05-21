@@ -13,23 +13,18 @@ export const _DataConflict = {
                 lot_label: 'H18347.01',
                 maverickType: 'Lot on hold',
                 actions: [{
-                    id: 123456,
+                    id: 1234,
                     type: 'Technical Glass',
                     conflictCount: 1
                 }]
             },
             {
-                lot_label: 'H18347.03',
+                lot_label: 'H18347.02',
                 maverickType: 'Lot on hold',
                 actions: [{
-                    id: 789012,
+                    id: 5678,
                     type: 'Partional chip',
                     conflictCount: 3
-                },
-                {
-                    id: 345678,
-                    type: 'Internal miss Test',
-                    conflictCount: 1
                 }]
             },
         ]
