@@ -11,7 +11,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import rutils from '00ricardo-utils'
-
+import ProgressBar from '../Components/ProgressBar';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -56,7 +56,6 @@ export const DataConflict = ({ open, handleClickClose, conflicts }) => {
     const [openDetails, setOpenDetails] = useState(false);
     const [solvedConflicts, setSolvedConflicts] = useState([]);
     const [unsolvedConflictsCount, setUnsolvedConflictsCount] = useState(undefined);
-    const [conflictedProps, setConflictedProps] = useState([]);
     const [_conflicts_, setConflicts] = useState(conflicts);
     const [RawData, setRawData] = useState([{
         id: 1234,
@@ -287,10 +286,6 @@ export const DataConflict = ({ open, handleClickClose, conflicts }) => {
                         padding: '20px 60px 20px 20px'
                     }} >
                     <span>Resolve conflicts before merging <b> local changes </b> into <b>remote database</b></span>
-                    <Button
-                        onClick={() => { getConflicts() }}>
-                        Test btn
-                    </Button>
                 </BootstrapDialogTitle>
                 {/* Fetching counter */}
                 <DialogContent dividers>
@@ -310,6 +305,8 @@ export const DataConflict = ({ open, handleClickClose, conflicts }) => {
                                 'Conflicts resolved.'}
                         </b>
                         <span>
+
+                            <ProgressBar backgroundColor='#fe5900' progressColor='#46555f' />
                             <CircularProgress style={{
                                 color: '#626262',
                                 width: '25px',
