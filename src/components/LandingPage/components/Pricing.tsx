@@ -57,7 +57,7 @@ const tiers = [
 export default function Pricing() {
   return (
     <Container
-      id="pricing"
+      id='pricing'
       sx={{
         pt: { xs: 4, sm: 12 },
         pb: { xs: 8, sm: 16 },
@@ -74,17 +74,17 @@ export default function Pricing() {
           textAlign: { sm: 'left', md: 'center' },
         }}
       >
-        <Typography component="h2" variant="h4" color="text.primary">
+        <Typography component='h2' variant='h4' color='text.primary'>
           Pricing
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Quickly build an effective pricing table for your potential customers with
-          this layout. <br />
+        <Typography variant='body1' color='text.secondary'>
+          Quickly build an effective pricing table for your potential customers
+          with this layout. <br />
           It&apos;s built with default Material UI components with little
           customization.
         </Typography>
       </Box>
-      <Grid container spacing={3} alignItems="center" justifyContent="center">
+      <Grid container spacing={3} alignItems='center' justifyContent='center'>
         {tiers.map((tier) => (
           <Grid
             item
@@ -118,18 +118,18 @@ export default function Pricing() {
                     color: tier.title === 'Professional' ? 'grey.100' : '',
                   }}
                 >
-                  <Typography component="h3" variant="h6">
+                  <Typography component='h3' variant='h6'>
                     {tier.title}
                   </Typography>
                   {tier.title === 'Professional' && (
                     <Chip
                       icon={<AutoAwesomeIcon />}
                       label={tier.subheader}
-                      size="small"
+                      size='small'
                       sx={{
-                        background: (theme) =>
+                        'background': (theme) =>
                           theme.palette.mode === 'light' ? '' : 'none',
-                        backgroundColor: 'primary.contrastText',
+                        'backgroundColor': 'primary.contrastText',
                         '& .MuiChip-label': {
                           color: 'primary.dark',
                         },
@@ -144,13 +144,14 @@ export default function Pricing() {
                   sx={{
                     display: 'flex',
                     alignItems: 'baseline',
-                    color: tier.title === 'Professional' ? 'grey.50' : undefined,
+                    color:
+                      tier.title === 'Professional' ? 'grey.50' : undefined,
                   }}
                 >
-                  <Typography component="h3" variant="h2">
+                  <Typography component='h3' variant='h2'>
                     ${tier.price}
                   </Typography>
-                  <Typography component="h3" variant="h6">
+                  <Typography component='h3' variant='h6'>
                     &nbsp; per month
                   </Typography>
                 </Box>
@@ -181,11 +182,12 @@ export default function Pricing() {
                       }}
                     />
                     <Typography
-                      component="text"
-                      variant="subtitle2"
+                      variant='subtitle2'
                       sx={{
                         color:
-                          tier.title === 'Professional' ? 'grey.200' : undefined,
+                          tier.title === 'Professional'
+                            ? 'grey.200'
+                            : undefined,
                       }}
                     >
                       {line}
@@ -197,9 +199,9 @@ export default function Pricing() {
                 <Button
                   fullWidth
                   variant={tier.buttonVariant as 'outlined' | 'contained'}
-                  component="a"
-                  href="/material-ui/getting-started/templates/checkout/"
-                  target="_blank"
+                  component='a'
+                  href='/material-ui/getting-started/templates/checkout/'
+                  target='_blank'
                 >
                   {tier.buttonText}
                 </Button>

@@ -2,123 +2,134 @@ import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import logo from '../assets/logo.png';
+import Lottie from 'lottie-react';
+import technologies_lottie from '../assets/technologies_lottie.json';
+import Typewriter from 'typewriter-effect';
+import { useState } from 'react';
 
 export default function Hero() {
-    return (
+  return (
+    <Box
+      id='about'
+      sx={(theme) => ({
+        width: '100%',
+        backgroundImage: `linear-gradient(#02294F, ${alpha('#090E10', 0.0)})`,
+        backgroundSize: '100% 20%',
+        backgroundRepeat: 'no-repeat',
+      })}
+    >
+      <Container
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          pt: { xs: 14, sm: 20 },
+          pb: { xs: 8, sm: 12 },
+        }}
+      >
+        <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
+          <Typewriter
+            onInit={(typewriter) => {
+              typewriter
+                .typeString(
+                  `<h1 style="display:flex; justify-content:center; text-align: center; font-size: clamp(3.5rem, 10vw, 4rem);">Hi, I'm Ricardo Briceño!</h1>`
+                )
+                .pauseFor(500)
+                .typeString(
+                  '<p style="display:flex; justify-content:center; text-align: center; font-size: clamp(3.5rem, 10vw, 4rem);">Software Engineer</p>'
+                )
+                .start();
+            }}
+          />
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            alignSelf='center'
+            spacing={1}
+            useFlexGap
+            sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
+          >
+            <Button variant='contained' color='primary'>
+              Download CV
+            </Button>
+          </Stack>
+        </Stack>
         <Box
-            id="hero"
-            sx={(theme) => ({
-                width: '100%',
-                backgroundImage:
-                    theme.palette.mode === 'light'
-                        ? 'linear-gradient(180deg, #CEE5FD, #FFF)'
-                        : `linear-gradient(#02294F, ${alpha('#090E10', 0.0)})`,
-                backgroundSize: '100% 20%',
-                backgroundRepeat: 'no-repeat',
-            })}
+          sx={(theme) => ({
+            mt: { xs: 8, sm: 10 },
+            alignSelf: 'center',
+            height: 'fit-content',
+            width: '100%',
+            backgroundImage: logo,
+            backgroundSize: 'cover',
+            borderRadius: '10px',
+            outline: '1px solid',
+            outlineColor: alpha('#9CCCFC', 0.1),
+            boxShadow: `0 0 24px 12px ${alpha('#033363', 0.2)}`,
+            padding: '35px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            justifyContent: 'space-between',
+          })}
         >
-            <Container
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    pt: { xs: 14, sm: 20 },
-                    pb: { xs: 8, sm: 12 },
-                }}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              maxWidth: 'auto',
+              gap: '1rem',
+            }}
+          >
+            <Typography
+              variant='h6'
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+                alignSelf: 'center',
+                textAlign: 'justify',
+              }}
             >
-                <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
-                    <Typography
-                        variant="h1"
-                        sx={{
-                            display: 'flex',
-                            flexDirection: { xs: 'column', md: 'row' },
-                            alignSelf: 'center',
-                            textAlign: 'center',
-                            fontSize: 'clamp(3.5rem, 10vw, 4rem)',
-                        }}
-                    >
-                        Our latest&nbsp;
-                        <Typography
-                            component="span"
-                            variant="h1"
-                            sx={{
-                                fontSize: 'clamp(3rem, 10vw, 4rem)',
-                                color: (theme) =>
-                                    theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
-                            }}
-                        >
-                            products
-                        </Typography>
-                    </Typography>
-                    <Typography
-                        textAlign="center"
-                        color="text.secondary"
-                        sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
-                    >
-                        Explore our cutting-edge dashboard, delivering high-quality solutions
-                        tailored to your needs. Elevate your experience with top-tier features
-                        and services.
-                    </Typography>
-                    <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        alignSelf="center"
-                        spacing={1}
-                        useFlexGap
-                        sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
-                    >
-                        <TextField
-                            id="outlined-basic"
-                            hiddenLabel
-                            size="small"
-                            variant="outlined"
-                            aria-label="Enter your email address"
-                            placeholder="Your email address"
-                            inputProps={{
-                                autocomplete: 'off',
-                                ariaLabel: 'Enter your email address',
-                            }}
-                        />
-                        <Button variant="contained" color="primary">
-                            Start now
-                        </Button>
-                    </Stack>
-                    <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
-                        By clicking &quot;Start now&quot; you agree to our&nbsp;
-                        <Link href="#" color="primary">
-                            Terms & Conditions
-                        </Link>
-                        .
-                    </Typography>
-                </Stack>
-                <Box
-                    id="image"
-                    sx={(theme) => ({
-                        mt: { xs: 8, sm: 10 },
-                        alignSelf: 'center',
-                        height: { xs: 200, sm: 700 },
-                        width: '100%',
-                        backgroundImage:
-                            theme.palette.mode === 'light'
-                                ? 'url("/static/images/templates/templates-images/hero-light.png")'
-                                : 'url("/static/images/templates/templates-images/hero-dark.png")',
-                        backgroundSize: 'cover',
-                        borderRadius: '10px',
-                        outline: '1px solid',
-                        outlineColor:
-                            theme.palette.mode === 'light'
-                                ? alpha('#BFCCD9', 0.5)
-                                : alpha('#9CCCFC', 0.1),
-                        boxShadow:
-                            theme.palette.mode === 'light'
-                                ? `0 0 12px 8px ${alpha('#9CCCFC', 0.2)}`
-                                : `0 0 24px 12px ${alpha('#033363', 0.2)}`,
-                    })}
-                />
-            </Container>
+              Hi there, I'm a Junior Web Developer, located in Funchal, Portugal
+              with a strong academic background and two years of professional
+              experience at ams OSRAM. Possessing a Bachelor's degree in
+              Computer Engineering from the University of Madeira and a Master's
+              degree in the same field from the University of Coimbra, I have
+              applied all my academic experience into projects in the Research
+              Field at different institutes, such as: ITI and INESC. All the
+              involvement with experienced colleagues has allowed me to grow at
+              a professional level. After 5 years, I decided to launch my
+              professional career.
+            </Typography>
+            <Typography
+              className='text'
+              variant='h6'
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+                alignSelf: 'center',
+                textAlign: 'justify',
+              }}
+            >
+              At ams OSRAM, I have embarked on my professional journey,
+              specializing in software engineering. As Software Engineer, I play
+              a pivotal role in developing data-driven applications, based on
+              the Oracle stack, including Oracle APEX and Oracle Databases.
+              Collaborating within an international and multi-disciplinary team,
+              I am entrusted with responsibilities within a critical distributed
+              system, underscoring my ability to handle complex tasks with
+              professionalism.
+            </Typography>
+          </div>
+          <Lottie
+            style={{ height: '400px', minWidth: '40%' }}
+            animationData={technologies_lottie}
+            loop={true}
+          />
         </Box>
-    );
+      </Container>
+    </Box>
+  );
 }
