@@ -1,15 +1,14 @@
+import { useState } from 'react';
 import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Lottie from 'lottie-react';
 import Hidden from '@mui/material/Hidden';
-import vui_lottie from '../assets/vui-lottie.json';
 import me from '../assets/me.png';
 import Typewriter from 'typewriter-effect';
-import { useState } from 'react';
+
 export default function Presentation() {
   const [showBtn, setShowBtn] = useState(false);
   const showDownloadBtn = () => {
@@ -150,12 +149,6 @@ export default function Presentation() {
               professionalism.
             </Typography>
           </div>
-          <Lottie
-            style={{ height: '400px', minWidth: '40%' }}
-            animationData={vui_lottie}
-            loop={true}
-          />
-
           <small
             style={{
               display: 'flex',

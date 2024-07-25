@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-
-// https://vitejs.dev/config/
+import { visualizer } from 'rollup-plugin-visualizer';
 export default defineConfig({
   base: './',
   build: {
@@ -13,11 +12,13 @@ export default defineConfig({
         entryFileNames: 'output.js',
         manualChunks: {
           'react-vendors': ['react', 'react-dom'],
-          'mui-vendors': ['@mui/material', '@mui/icons-material'],
-          'lottie-vendors': ['lottie-react'],
+          'mui-core': ['@mui/material'],
+          'mui-icons': ['@mui/icons-material'],
+          'mui-system': ['@mui/system'],
+          //'storybook': ['lottie-react'],
         },
       },
     },
   },
-  plugins: [react()],
+  plugins: [react(), visualizer({ open: true })],
 });
