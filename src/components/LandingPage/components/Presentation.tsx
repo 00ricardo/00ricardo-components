@@ -149,16 +149,6 @@ export default function Presentation() {
               professionalism.
             </Typography>
           </div>
-          <small
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignSelf: 'center',
-              textAlign: 'justify',
-            }}
-          >
-            “Everything is connected.” ━ Dark
-          </small>
         </Box>
       </Container>
     </Box>
