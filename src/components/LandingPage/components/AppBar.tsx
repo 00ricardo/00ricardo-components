@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import logo from '../assets/logo.png';
+
 import { open } from '../../../signals/LandingPage';
 import { useSignals } from '@preact/signals-react/runtime';
 import Button from '@mui/material/Button';
@@ -44,7 +45,7 @@ function AppAppBar() {
         <Container maxWidth='lg'>
           <Toolbar
             variant='regular'
-            sx={(theme) => ({
+            sx={() => ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -86,19 +87,19 @@ function AppAppBar() {
                   </Typography>
                 </MenuItem>
                 <MenuItem
+                  onClick={() => scrollToSection('projects')}
+                  sx={{ py: '6px', px: '12px' }}
+                >
+                  <Typography variant='body2' color='text.primary'>
+                    Projects and Experience
+                  </Typography>
+                </MenuItem>
+                <MenuItem
                   onClick={() => scrollToSection('skills')}
                   sx={{ py: '6px', px: '12px' }}
                 >
                   <Typography variant='body2' color='text.primary'>
                     Skills
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection('projects')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant='body2' color='text.primary'>
-                    Projects
                   </Typography>
                 </MenuItem>
                 <MenuItem

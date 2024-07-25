@@ -12,31 +12,33 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
 import EdgesensorHighRoundedIcon from '@mui/icons-material/EdgesensorHighRounded';
 import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
-import logo from '../assets/logo.png';
+import LanguageIcon from '@mui/icons-material/Language';
+import professional from '../utils/professional';
+import { IconButton } from '@mui/material';
+type Technologies = {
+  backend: string[];
+  frontend: string[];
+  cicd: string[];
+};
 const items = [
   {
     icon: <ViewQuiltRoundedIcon />,
-    title: 'Dashboard',
-    description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    imageLight: logo,
-    imageDark: logo,
+    title: 'Professional',
+    description: 'Find more details about my professional career.',
+    more: 'Currently working at ams OSRAM',
   },
   {
     icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
-    description:
-      'This item could provide information about the mobile app version of the product.',
-    imageLight: logo,
-    imageDark: logo,
+    title: 'Personal Projects',
+    description: 'Check some cool projects developed by myself.',
+    more: 'Currently working on cloning Spotify App',
   },
   {
     icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
+    title: 'Internships and Courses',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    imageLight: logo,
-    imageDark: logo,
+      "I'm always looking forward to learn more to keep a fresh mindset with the best and coolest technologies.",
+    more: 'Currently learning more about TypeScript',
   },
 ];
 
@@ -55,16 +57,17 @@ export default function Features() {
         <Grid item xs={12} md={6}>
           <div>
             <Typography component='h2' variant='h4' color='text.primary'>
-              Product features
+              Projects & Experience
             </Typography>
             <Typography
               variant='body1'
               color='text.secondary'
               sx={{ mb: { xs: 2, sm: 4 } }}
             >
-              Here you can provide a brief overview of the key features of the
-              product. For example, you could list the number of features, the
-              types of features, add-ons, or the benefits of the features.
+              Find some details about my journey through various companies,
+              collaborations, and achievements. I'm alaways looking forward to
+              embrace new challenges with passion, dedication, and expertise
+              across diverse projects and professional experiences.
             </Typography>
           </div>
           <Grid
@@ -78,25 +81,6 @@ export default function Features() {
                 key={index}
                 label={title}
                 onClick={() => handleItemClick(index)}
-                sx={{
-                  'borderColor': (theme) => {
-                    if (theme.palette.mode === 'light') {
-                      return selectedItemIndex === index ? 'primary.light' : '';
-                    }
-                    return selectedItemIndex === index ? 'primary.light' : '';
-                  },
-                  'background': (theme) => {
-                    if (theme.palette.mode === 'light') {
-                      return selectedItemIndex === index ? 'none' : '';
-                    }
-                    return selectedItemIndex === index ? 'none' : '';
-                  },
-                  'backgroundColor':
-                    selectedItemIndex === index ? 'primary.main' : '',
-                  '& .MuiChip-label': {
-                    color: selectedItemIndex === index ? '#fff' : '',
-                  },
-                }}
               />
             ))}
           </Grid>
@@ -110,10 +94,6 @@ export default function Features() {
           >
             <Box
               sx={{
-                backgroundImage: (theme) =>
-                  theme.palette.mode === 'light'
-                    ? items[selectedItemIndex].imageLight
-                    : items[selectedItemIndex].imageDark,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 minHeight: 280,
@@ -134,23 +114,6 @@ export default function Features() {
               >
                 {selectedFeature.description}
               </Typography>
-              <Link
-                color='primary'
-                variant='body2'
-                fontWeight='bold'
-                sx={{
-                  'display': 'inline-flex',
-                  'alignItems': 'center',
-                  '& > svg': { transition: '0.2s' },
-                  '&:hover > svg': { transform: 'translateX(2px)' },
-                }}
-              >
-                <span>Learn more</span>
-                <ChevronRightRoundedIcon
-                  fontSize='small'
-                  sx={{ mt: '1px', ml: '2px' }}
-                />
-              </Link>
             </Box>
           </Box>
           <Stack
@@ -161,7 +124,7 @@ export default function Features() {
             useFlexGap
             sx={{ width: '100%', display: { xs: 'none', sm: 'flex' } }}
           >
-            {items.map(({ icon, title, description }, index) => (
+            {items.map(({ icon, title, description, more }, index) => (
               <Card
                 key={index}
                 variant='outlined'
@@ -174,12 +137,7 @@ export default function Features() {
                   background: 'none',
                   backgroundColor:
                     selectedItemIndex === index ? 'action.selected' : undefined,
-                  borderColor: (theme) => {
-                    if (theme.palette.mode === 'light') {
-                      return selectedItemIndex === index
-                        ? 'primary.light'
-                        : 'grey.200';
-                    }
+                  borderColor: () => {
                     return selectedItemIndex === index
                       ? 'primary.dark'
                       : 'grey.800';
@@ -198,12 +156,7 @@ export default function Features() {
                 >
                   <Box
                     sx={{
-                      color: (theme) => {
-                        if (theme.palette.mode === 'light') {
-                          return selectedItemIndex === index
-                            ? 'primary.main'
-                            : 'grey.300';
-                        }
+                      color: () => {
                         return selectedItemIndex === index
                           ? 'primary.main'
                           : 'grey.700';
@@ -241,7 +194,7 @@ export default function Features() {
                         event.stopPropagation();
                       }}
                     >
-                      <span>Learn more</span>
+                      <span>{more}</span>
                       <ChevronRightRoundedIcon
                         fontSize='small'
                         sx={{ mt: '1px', ml: '2px' }}
@@ -265,7 +218,6 @@ export default function Features() {
               height: '100%',
               width: '100%',
               display: { xs: 'none', sm: 'flex' },
-              pointerEvents: 'none',
             }}
           >
             <Box
@@ -274,12 +226,64 @@ export default function Features() {
                 width: 420,
                 height: 500,
                 backgroundSize: 'contain',
-                backgroundImage: (theme) =>
-                  theme.palette.mode === 'light'
-                    ? items[selectedItemIndex].imageLight
-                    : items[selectedItemIndex].imageDark,
+                overflowY: 'auto',
               }}
-            />
+            >
+              {selectedFeature.title === 'Professional' &&
+                professional.map((pro, idx) => (
+                  <div key={idx} style={{ paddingRight: 50, paddingLeft: 50 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <div>
+                        <div>Role: {pro.role}</div>
+                        <div>
+                          Period: {pro.period.start} - {pro.period.end}
+                        </div>
+                      </div>
+
+                      <IconButton
+                        onClick={() => {
+                          const absoluteURL = new URL(
+                            pro.web,
+                            window.location.href
+                          );
+                          window.location.href = absoluteURL.toString();
+                        }}
+                      >
+                        <LanguageIcon />
+                      </IconButton>
+                    </div>
+
+                    <img
+                      src={pro.src}
+                      style={{ width: '100%', borderRadius: '10px' }}
+                    />
+                    {pro.description}
+                    <ul>
+                      {pro.activities.map((act, idxx) => (
+                        <li key={idxx}>{act}</li>
+                      ))}
+                    </ul>
+                    <hr />
+                    <div>
+                      {Object.keys(pro.technologies).map((tech, idxxx) => (
+                        <div key={idxxx}>
+                          {(
+                            pro.technologies[
+                              tech as keyof Technologies
+                            ] as string[]
+                          ).toString()}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+            </Box>
           </Card>
         </Grid>
       </Grid>

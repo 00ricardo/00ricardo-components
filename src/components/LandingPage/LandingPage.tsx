@@ -3,8 +3,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import AppAppBar from './components/AppBar';
-import Hero from './components/Hero';
-import LogoCollection from './components/LogoCollection';
+import Presentation from './components/Presentation';
 import Highlights from './components/Highlights';
 import Pricing from './components/Pricing';
 import Features from './components/Features';
@@ -19,9 +18,8 @@ export default function LandingPage() {
     <ThemeProvider theme={LPtheme}>
       <CssBaseline />
       <AppAppBar />
-      <Hero />
+      <Presentation />
       <Box sx={{ bgcolor: 'background.default' }}>
-        <LogoCollection />
         <Features />
         <Divider />
         <Testimonials />

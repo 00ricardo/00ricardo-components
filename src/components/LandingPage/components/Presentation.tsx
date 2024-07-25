@@ -4,20 +4,24 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import logo from '../assets/logo.png';
 import Lottie from 'lottie-react';
-import technologies_lottie from '../assets/technologies_lottie.json';
+import Hidden from '@mui/material/Hidden';
+import vui_lottie from '../assets/vui-lottie.json';
+import me from '../assets/me.png';
 import Typewriter from 'typewriter-effect';
 import { useState } from 'react';
-
-export default function Hero() {
+export default function Presentation() {
+  const [showBtn, setShowBtn] = useState(false);
+  const showDownloadBtn = () => {
+    setShowBtn(true);
+  };
   return (
     <Box
       id='about'
-      sx={(theme) => ({
+      sx={() => ({
         width: '100%',
-        backgroundImage: `linear-gradient(#02294F, ${alpha('#090E10', 0.0)})`,
-        backgroundSize: '100% 20%',
+        backgroundImage: `linear-gradient(#007a8c, ${alpha('#090E10', 0.0)})`,
+        backgroundSize: '100% 45%',
         backgroundRepeat: 'no-repeat',
       })}
     >
@@ -30,40 +34,63 @@ export default function Hero() {
           pb: { xs: 8, sm: 12 },
         }}
       >
-        <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
-          <Typewriter
-            onInit={(typewriter) => {
-              typewriter
-                .typeString(
-                  `<h1 style="display:flex; justify-content:center; text-align: center; font-size: clamp(3.5rem, 10vw, 4rem);">Hi, I'm Ricardo Briceño!</h1>`
-                )
-                .pauseFor(500)
-                .typeString(
-                  '<p style="display:flex; justify-content:center; text-align: center; font-size: clamp(3.5rem, 10vw, 4rem);">Software Engineer</p>'
-                )
-                .start();
-            }}
-          />
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            alignSelf='center'
-            spacing={1}
-            useFlexGap
-            sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
-          >
-            <Button variant='contained' color='primary'>
-              Download CV
-            </Button>
-          </Stack>
+        <Stack
+          spacing={2}
+          useFlexGap
+          sx={{
+            width: '100%',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Typewriter
+              onInit={(typewriter) => {
+                typewriter
+                  .typeString(
+                    `<h1 style="display:flex; justify-content:center; text-align: center; font-size: clamp(3.5rem, 10vw, 4rem);">Hi, I'm Ricardo Briceño!</h1>`
+                  )
+                  .pauseFor(500)
+                  .typeString(
+                    '<p style="display:flex; justify-content:center; text-align: center; font-size: clamp(3.5rem, 10vw, 4rem);">Software Engineer</p>'
+                  )
+                  .callFunction(showDownloadBtn)
+                  .start();
+              }}
+            />
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              alignSelf='center'
+              spacing={1}
+              sx={{ width: 'auto' }}
+            >
+              {showBtn && (
+                <Button variant='contained' color='primary' onClick={() => {}}>
+                  Download CV
+                </Button>
+              )}
+            </Stack>
+          </div>
+          <Hidden only={['xs', 'sm', 'md']}>
+            <img
+              style={{
+                filter: 'drop-shadow(0px 0px 35px rgba(255, 255, 255, 0.25))',
+                width: '35%',
+                height: '35%',
+                borderRadius: '50%',
+              }}
+              src={me}
+              alt={'Ricardo Briceño'}
+              loading='lazy'
+            />
+          </Hidden>
         </Stack>
         <Box
-          sx={(theme) => ({
+          sx={() => ({
             mt: { xs: 8, sm: 10 },
             alignSelf: 'center',
             height: 'fit-content',
             width: '100%',
-            backgroundImage: logo,
-            backgroundSize: 'cover',
             borderRadius: '10px',
             outline: '1px solid',
             outlineColor: alpha('#9CCCFC', 0.1),
@@ -125,9 +152,20 @@ export default function Hero() {
           </div>
           <Lottie
             style={{ height: '400px', minWidth: '40%' }}
-            animationData={technologies_lottie}
+            animationData={vui_lottie}
             loop={true}
           />
+
+          <small
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignSelf: 'center',
+              textAlign: 'justify',
+            }}
+          >
+            “Everything is connected.” ━ Dark
+          </small>
         </Box>
       </Container>
     </Box>
