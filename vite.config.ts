@@ -10,21 +10,6 @@ export default defineConfig({
       input: './src/main.tsx',
       output: {
         entryFileNames: 'output.js',
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('@mui/material')) {
-              return 'mui-material';
-            }
-            if (id.includes('@mui/icons-material')) {
-              return 'mui-icons';
-            }
-            return id
-              .toString()
-              .split('node_modules/')[1]
-              .split('/')[0]
-              .toString();
-          }
-        },
       },
     },
   },

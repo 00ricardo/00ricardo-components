@@ -231,7 +231,7 @@ export default function Features() {
             >
               {selectedFeature.title === 'Professional' &&
                 professional.map((pro, idx) => (
-                  <div key={idx} style={{ paddingRight: 50, paddingLeft: 50 }}>
+                  <div key={idx} style={{ paddingRight: 50 }}>
                     <div
                       style={{
                         display: 'flex',
