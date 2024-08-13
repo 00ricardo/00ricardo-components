@@ -9,8 +9,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-
-export const Home: Story = {
+export const Init: Story = {
   args: {
     title: 'LandingPage',
   },
