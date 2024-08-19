@@ -19,14 +19,58 @@ import NoRowsOverlay from './NoRowsOverlay';
 import HelpIcon from '@mui/icons-material/Help';
 import Tooltip from '@mui/material/Tooltip';
 import HelperDialog from './HelperDialog';
+import { styled, alpha } from '@mui/material/styles';
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
 const drawerWidth = 320;
-
+const Search = styled('div')(({ theme }) => ({
+  'position': 'relative',
+  'borderRadius': theme.shape.borderRadius,
+  'backgroundColor': alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  'marginLeft': 0,
+  'width': '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+}));
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  'color': 'inherit',
+  'width': '100%',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    [theme.breakpoints.up('sm')]: {
+      'width': '12ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
+  },
+}));
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 export default function PermanentDrawerRight({
   relations,
   setNodeSelected,
   getDirectChildrenWithLinks,
   data,
   nodes,
+  setSearchLot,
+  focusNode,
+  deepSearch,
 }) {
   const [openHelperDialog, setOpenHelperDialog] = useState(false);
   return (
@@ -50,11 +94,23 @@ export default function PermanentDrawerRight({
           <Typography variant='h6' noWrap component='div'>
             Lot Relations
           </Typography>
-          <Tooltip title='Help'>
-            <IconButton onClick={() => setOpenHelperDialog(true)}>
-              <HelpIcon sx={{ color: '#fff' }} />
-            </IconButton>
-          </Tooltip>
+          <div style={{ display: 'flex' }}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder='Search Lot'
+                onChange={(e) => setSearchLot(e.target.value.trim())}
+                onKeyDown={(e) => (e.key === 'Enter' ? deepSearch() : () => {})}
+              />
+            </Search>
+            <Tooltip title='Help'>
+              <IconButton onClick={() => setOpenHelperDialog(true)}>
+                <HelpIcon sx={{ color: '#fff' }} />
+              </IconButton>
+            </Tooltip>
+          </div>
         </Toolbar>
       </AppBar>
       {hasValue(relations.node) && (
@@ -84,7 +140,7 @@ export default function PermanentDrawerRight({
               relations.children.map((child, idx) => (
                 <ListItem key={idx} disablePadding>
                   <ListItemButton
-                    onClick={() =>
+                    onClick={() => {
                       setNodeSelected({
                         node: child.node,
                         children: getDirectChildrenWithLinks(
@@ -92,8 +148,9 @@ export default function PermanentDrawerRight({
                           data,
                           nodes
                         ),
-                      })
-                    }
+                      });
+                      focusNode(child.node);
+                    }}
                   >
                     <ListItemIcon>
                       <HubIcon />

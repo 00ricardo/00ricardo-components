@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import fore from './fore.json';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import fore from './fore2.json';
 import { ForceGraph2D } from 'react-force-graph';
 import { forceCollide } from 'd3';
 import { hasValue } from '00ricardo-utils';
@@ -9,6 +9,7 @@ const ReactGraph2 = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [nodeSelected, setNodeSelected] = useState({ node: {}, children: [] });
   const [crossSiteNodes, setCrossSiteNodes] = useState([]);
+  const [searchLot, setSearchLot] = useState('');
   const extractNodesWithPaths = (data) => {
     const nodesMap = new Map();
     const pathsMap = new Map(); // Stores the calculated paths
@@ -142,6 +143,25 @@ const ReactGraph2 = () => {
   const getRootNode = (nodes) => {
     return nodes.find((node) => node.level === 0);
   };
+  const focusNode = (lot) => {
+    const fg = fgRef.current;
+    if (lot) {
+      fg.centerAt(lot.x, lot.y);
+      fg.zoom(1);
+    }
+  };
+  const deepSearch = useCallback(() => {
+    const lot = graphData.nodes.find(
+      (n) => n.lotid === searchLot || n.label === searchLot
+    );
+    setNodeSelected({
+      node: { ...lot },
+      children: [
+        ...getDirectChildrenWithLinks(lot.leaf, fore.items, graphData.nodes),
+      ],
+    });
+    focusNode(lot);
+  }, [searchLot]);
   useEffect(() => {
     const data = fore.items;
     const nodes = extractNodesWithPaths(data);
@@ -163,10 +183,12 @@ const ReactGraph2 = () => {
       'collision',
       forceCollide((node) => Math.sqrt(100 / (node.level + 1)))
     );
+
     const root = getRootNode(graphData.nodes);
     if (hasValue(root)) {
       setTimeout(() => {
         fg.centerAt(root.x, root.y);
+        fg.zoom(0.7);
       }, 500);
     }
     console.log(root);
@@ -178,29 +200,9 @@ const ReactGraph2 = () => {
         ref={fgRef}
         minZoom={0.1}
         maxZoom={2}
+        d3AlphaDecay={0.05} // Slower decay for a longer force simulation
+        d3VelocityDecay={0.4} // Reduce to increase movement
         graphData={graphData}
-        onNodeClick={(node) => {
-          setNodeSelected({
-            node: { ...node },
-            children: [
-              ...getDirectChildrenWithLinks(
-                node.leaf,
-                fore.items,
-                graphData.nodes
-              ),
-            ],
-          });
-          console.log({
-            node: { ...node },
-            children: [
-              ...getDirectChildrenWithLinks(
-                node.leaf,
-                fore.items,
-                graphData.nodes
-              ),
-            ],
-          });
-        }}
         cooldownTicks={50}
         linkWidth={1}
         linkDirectionalParticleSpeed={0.002}
@@ -214,7 +216,6 @@ const ReactGraph2 = () => {
         nodeId='leaf'
         nodeLabel='label'
         linkLabel='label'
-        d3VelocityDecay={0.3}
         nodeColor={
           (e) =>
             hasValue(nodeSelected) && e.leaf === nodeSelected.node.leaf
@@ -225,6 +226,18 @@ const ReactGraph2 = () => {
                   ? '#0093ff' // ! Green
                   : '#4c8a38' // ! Blue
         }
+        onNodeClick={(node) => {
+          setNodeSelected({
+            node: { ...node },
+            children: [
+              ...getDirectChildrenWithLinks(
+                node.leaf,
+                fore.items,
+                graphData.nodes
+              ),
+            ],
+          });
+        }}
       />
       <PermanentDrawerRight
         relations={nodeSelected}
@@ -232,6 +245,10 @@ const ReactGraph2 = () => {
         getDirectChildrenWithLinks={getDirectChildrenWithLinks}
         data={fore.items}
         nodes={graphData.nodes}
+        searchLot={searchLot}
+        setSearchLot={setSearchLot}
+        deepSearch={deepSearch}
+        focusNode={focusNode}
       />
     </div>
   );
