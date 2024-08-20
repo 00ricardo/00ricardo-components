@@ -1,15 +1,19 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import fore from './fore2.json';
 import { ForceGraph2D } from 'react-force-graph';
-import { forceCollide } from 'd3';
+import { forceCollide, forceCenter } from 'd3';
 import { hasValue } from '00ricardo-utils';
 import PermanentDrawerRight from './PermanentDrawerRight';
+import GraphToolbar from './GraphToolbar';
 const ReactGraph2 = () => {
   const fgRef = useRef();
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [nodeSelected, setNodeSelected] = useState({ node: {}, children: [] });
   const [crossSiteNodes, setCrossSiteNodes] = useState([]);
   const [searchLot, setSearchLot] = useState('');
+  const [enableParticules, setEnableParticules] = useState(true);
+  const [maxLevel, setMaxLevel] = useState(0);
+  const [level, setLevel] = useState('all');
   const extractNodesWithPaths = (data) => {
     const nodesMap = new Map();
     const pathsMap = new Map(); // Stores the calculated paths
@@ -150,6 +154,38 @@ const ReactGraph2 = () => {
       fg.zoom(1);
     }
   };
+  const expandNodes = () => {
+    fgRef.current.d3Force('charge').strength(-100);
+    fgRef.current.d3ReheatSimulation(); // Reheat the simulation to apply changes
+  };
+  const condenseNodes = () => {
+    fgRef.current.d3Force('charge').strength(0);
+    fgRef.current.d3ReheatSimulation(); // Reheat the simulation to apply changes
+  };
+  const centerNodes = () => {
+    const nodes = graphData.nodes.map((node) => {
+      node.x = 0;
+      node.y = 0;
+      return node;
+    });
+    setGraphData({ nodes: nodes, links: graphData.links });
+  };
+  const focusRoot = () => {
+    const fg = fgRef.current;
+    const root = getRootNode(graphData.nodes);
+    if (hasValue(root)) {
+      fg.centerAt(root.x, root.y);
+      fg.zoom(0.7);
+    }
+  };
+  const zoomIn = () => {
+    const zoomLevel = fgRef.current.zoom();
+    fgRef.current.zoom(zoomLevel * 1.2, 200);
+  };
+  const zoomOut = () => {
+    const zoomLevel = fgRef.current.zoom();
+    fgRef.current.zoom(zoomLevel * 0.8, 200);
+  };
   const deepSearch = useCallback(() => {
     const lot = graphData.nodes.find(
       (n) => n.lotid === searchLot || n.label === searchLot
@@ -162,12 +198,19 @@ const ReactGraph2 = () => {
     });
     focusNode(lot);
   }, [searchLot]);
+  const getMaxLevel = (arr) => Math.max(...arr.map((obj) => obj.node_level));
+
+  // ! *******
+  // ! Effects
+  // ! *******
   useEffect(() => {
     const data = fore.items;
     const nodes = extractNodesWithPaths(data);
     const links = extractLinks(data, nodes);
     const crossiteRelations = getCrossSiteNodes(data);
+    const maxLvl = getMaxLevel(data);
     setCrossSiteNodes([...crossiteRelations]);
+    setMaxLevel(maxLvl);
     console.log({
       data,
       nodes,
@@ -178,40 +221,52 @@ const ReactGraph2 = () => {
   }, []);
   // ! Add collision force and set Zoom Level
   useEffect(() => {
-    const fg = fgRef.current;
-    fg.d3Force(
-      'collision',
-      forceCollide((node) => Math.sqrt(100 / (node.level + 1)))
-    );
-
-    const root = getRootNode(graphData.nodes);
-    if (hasValue(root)) {
-      setTimeout(() => {
-        fg.centerAt(root.x, root.y);
-        fg.zoom(0.7);
-      }, 500);
-    }
-    console.log(root);
+    focusRoot();
   }, [graphData]);
 
   return (
     <div style={{ backgroundColor: '#101020' }}>
+      <GraphToolbar
+        relations={nodeSelected}
+        expandNodes={expandNodes}
+        condenseNodes={condenseNodes}
+        centerNodes={centerNodes}
+        enableParticules={enableParticules}
+        setEnableParticules={setEnableParticules}
+        maxLevel={maxLevel}
+        level={level}
+        setLevel={setLevel}
+        focusRoot={focusRoot}
+        zoomIn={zoomIn}
+        zoomOut={zoomOut}
+      />
       <ForceGraph2D
         ref={fgRef}
-        minZoom={0.1}
-        maxZoom={2}
-        d3AlphaDecay={0.05} // Slower decay for a longer force simulation
+        d3AlphaDecay={0.01} // Slower decay for a longer force simulation
         d3VelocityDecay={0.4} // Reduce to increase movement
-        graphData={graphData}
+        graphData={{
+          nodes: graphData.nodes.filter(
+            (node) => node.level <= level || level === 'all'
+          ),
+          links: graphData.links.filter(
+            (link) =>
+              (link.source.level <= level && link.target.level <= level) ||
+              level === 'all'
+          ),
+        }}
         cooldownTicks={50}
         linkWidth={1}
         linkDirectionalParticleSpeed={0.002}
-        linkDirectionalParticles={5}
-        linkDirectionalArrowLength={0}
-        linkDirectionalArrowRelPos={1}
+        linkDirectionalParticles={enableParticules ? 5 : 0}
         linkDirectionalArrowColor={'arrowColor'}
         linkColor={() => 'rgba(255,255,255,0.1)'}
-        nodeVal={(node) => (node.index === 0 ? 500 : 10)} // ! Node Value Size
+        nodeVal={(node) =>
+          node.index === 0
+            ? 700
+            : !crossSiteNodes.includes(node.leaf)
+              ? 150
+              : 20
+        } // ! Node Value Size
         nodeRelSize={1} // ! -> Node Relative Size to its value
         nodeId='leaf'
         nodeLabel='label'
@@ -219,12 +274,12 @@ const ReactGraph2 = () => {
         nodeColor={
           (e) =>
             hasValue(nodeSelected) && e.leaf === nodeSelected.node.leaf
-              ? 'yellow'
+              ? '#F1C40F' // ! Yellow Lot Selected
               : e.index === 0
-                ? '#ff7b00' // ! Orange
+                ? '#C0392B' // ! Red (Origin Lot)
                 : crossSiteNodes.includes(e.leaf)
-                  ? '#0093ff' // ! Green
-                  : '#4c8a38' // ! Blue
+                  ? '#2980B9' // ! Blue (Cross site lots)
+                  : '#16a05d' // ! Green (Lot belongs to source system)
         }
         onNodeClick={(node) => {
           setNodeSelected({
@@ -237,6 +292,9 @@ const ReactGraph2 = () => {
               ),
             ],
           });
+        }}
+        onZoom={(e) => {
+          console.log(e);
         }}
       />
       <PermanentDrawerRight
