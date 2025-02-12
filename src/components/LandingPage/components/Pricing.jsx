@@ -197,7 +197,7 @@ export default function Pricing() {
               <CardActions>
                 <Button
                   fullWidth
-                  variant={tier.buttonVariant as 'outlined' | 'contained'}
+                  variant={tier.buttonVariant}
                   component='a'
                   href='/material-ui/getting-started/templates/checkout/'
                   target='_blank'

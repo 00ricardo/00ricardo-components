@@ -8,14 +8,14 @@ import Typography from '@mui/material/Typography';
 import Hidden from '@mui/material/Hidden';
 import me from '../assets/me.png';
 import Typewriter from 'typewriter-effect';
-
+import CV from '../assets/RicardoBriceñoCV.pdf';
 export default function Presentation() {
   const [showBtn, setShowBtn] = useState(false);
   const showDownloadBtn = () => {
     setShowBtn(true);
   };
 
-  const calculateAge = (dob: string) => {
+  const calculateAge = (dob) => {
     const today = new Date();
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -82,7 +82,11 @@ export default function Presentation() {
               sx={{ width: 'auto' }}
             >
               {showBtn && (
-                <Button variant='contained' color='primary' onClick={() => {}}>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() => window.open(CV)}
+                >
                   Download CV
                 </Button>
               )}
@@ -130,12 +134,19 @@ export default function Presentation() {
             <Typography variant='h6'>
               Hi there, I'm Ricardo Briceño, a {calculateAge('1998-03-05')} year
               old Software Engineer, located in Funchal, Portugal with a strong
-              academic background and two years of professional experience at
-              ams OSRAM. I possess a Bachelor's degree in Computer Engineering
-              from the University of Madeira and a Master's degree in the same
-              field from the University of Coimbra. I have applied all my
-              academic experience into projects in the Research Field at
-              different institutes, such as:{' '}
+              academic background and two years of professional experience at{' '}
+              <a
+                target='_blank'
+                href='https://ams-osram.com/'
+                style={{ textDecoration: 'none', color: '#89acfa' }}
+              >
+                ams OSRAM
+              </a>
+              . I possess a Bachelor's degree in Computer Engineering from the
+              University of Madeira and a Master's degree in the same field from
+              the University of Coimbra. I have applied all my academic
+              experience into projects in the Research Field at different
+              institutes, such as:{' '}
               <a
                 target='_blank'
                 href='https://www.arditi.pt/pt/'
@@ -152,11 +163,10 @@ export default function Presentation() {
                 INESC TEC
               </a>
               . All the involvement with experienced colleagues has allowed me
-              to grow at a professional level. After 5 years, I decided to
-              launch my professional career.
+              to grow at a professional level.
             </Typography>
             <Typography variant='h6'>
-              At ams OSRAM, I have embarked on my professional journey,
+              At ams OSRAM , I have embarked on my professional journey,
               specializing in software engineering with a Full Stack role. As
               Software Engineer, I play a pivotal role in developing data-driven
               applications, based on the Oracle stack, including Oracle APEX and

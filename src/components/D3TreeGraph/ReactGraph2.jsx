@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import fore from './fore2.json';
+import fore from './fore.json';
 import { ForceGraph2D } from 'react-force-graph';
 import { forceCollide, forceCenter } from 'd3';
 import { hasValue } from '00ricardo-utils';
@@ -164,8 +164,8 @@ const ReactGraph2 = () => {
   };
   const centerNodes = () => {
     const nodes = graphData.nodes.map((node) => {
-      node.x = 0;
-      node.y = 0;
+      node.x = node.y = 0;
+      node.fx = node.fy = undefined;
       return node;
     });
     setGraphData({ nodes: nodes, links: graphData.links });
@@ -293,8 +293,10 @@ const ReactGraph2 = () => {
             ],
           });
         }}
-        onZoom={(e) => {
-          console.log(e);
+        onNodeDragEnd={(node) => {
+          node.fx = node.x;
+          node.fy = node.y;
+          node.fz = node.z;
         }}
       />
       <PermanentDrawerRight

@@ -6,12 +6,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     chunkSizeWarningLimit: 1500,
-    rollupOptions: {
-      input: './src/main.tsx',
-      output: {
-        entryFileNames: 'output.js',
-      },
-    },
   },
-  plugins: [react(), visualizer({ open: true, gzipSize: true })],
+  plugins: [react(), visualizer({ open: false, gzipSize: true })],
 });

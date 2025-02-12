@@ -13,11 +13,10 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 function AppAppBar() {
   useSignals();
-  console.log('Rendering Appbar...');
-  const toggleDrawer = (newOpen: boolean) => () => {
+  const toggleDrawer = (newOpen) => () => {
     open.value = newOpen;
   };
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = (sectionId) => {
     const sectionElement = document.getElementById(sectionId);
     const offset = 128;
     if (sectionElement) {

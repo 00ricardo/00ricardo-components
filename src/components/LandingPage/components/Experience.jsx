@@ -14,12 +14,13 @@ import EdgesensorHighRoundedIcon from '@mui/icons-material/EdgesensorHighRounded
 import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 import LanguageIcon from '@mui/icons-material/Language';
 import professional from '../utils/professional';
+import personal_projects from '../utils/personal_projects';
+import internships_courses from '../utils/internships_courses';
 import { IconButton } from '@mui/material';
-type Technologies = {
-  backend: string[];
-  frontend: string[];
-  cicd: string[];
-};
+import rutils from '00ricardo-utils';
+import Pagination from '@mui/material/Pagination';
+import Divider from '@mui/material/Divider';
+
 const items = [
   {
     icon: <ViewQuiltRoundedIcon />,
@@ -42,14 +43,19 @@ const items = [
   },
 ];
 
-export default function Features() {
+export default function Experience() {
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
+  const [page, setPage] = React.useState(1);
 
-  const handleItemClick = (index: number) => {
+  const handleItemClick = (index) => {
     setSelectedItemIndex(index);
   };
 
   const selectedFeature = items[selectedItemIndex];
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [selectedItemIndex]);
 
   return (
     <Container id='projects' sx={{ py: { xs: 8, sm: 16 } }}>
@@ -64,7 +70,7 @@ export default function Features() {
               color='text.secondary'
               sx={{ mb: { xs: 2, sm: 4 } }}
             >
-              Find some details about my journey through various companies,
+              Find some details about my journey through companies,
               collaborations, and achievements. I'm alaways looking forward to
               embrace new challenges with passion, dedication, and expertise
               across diverse projects and professional experiences.
@@ -217,7 +223,10 @@ export default function Features() {
             sx={{
               height: '100%',
               width: '100%',
+
               display: { xs: 'none', sm: 'flex' },
+              flexDirection: 'column',
+              paddingBottom: '20px',
             }}
           >
             <Box
@@ -229,64 +238,83 @@ export default function Features() {
                 overflowY: 'auto',
               }}
             >
-              {selectedFeature.title === 'Professional' &&
-                professional.map((pro, idx) => (
-                  <div key={idx} style={{ paddingRight: 50 }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
+              {(selectedFeature.title === 'Professional'
+                ? professional
+                : selectedFeature.title === 'Personal Projects'
+                ? personal_projects
+                : internships_courses
+              ).map((pro, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    paddingRight: 50,
+                    display: page === idx + 1 ? 'block' : 'none',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <div>
+                      <div>{rutils.hasValue(pro.role) ? pro.role : ''}</div>
+                      <div>
+                        Period: {pro.period.start} - {pro.period.end}
+                      </div>
+                    </div>
+                    <IconButton
+                      onClick={() => {
+                        const absoluteURL = new URL(
+                          pro.web,
+                          window.location.href
+                        );
+                        window.location.href = absoluteURL.toString();
                       }}
                     >
-                      <div>
-                        <div>Role: {pro.role}</div>
-                        <div>
-                          Period: {pro.period.start} - {pro.period.end}
-                        </div>
-                      </div>
-
-                      <IconButton
-                        onClick={() => {
-                          const absoluteURL = new URL(
-                            pro.web,
-                            window.location.href
-                          );
-                          window.location.href = absoluteURL.toString();
-                        }}
-                      >
-                        <LanguageIcon />
-                      </IconButton>
-                    </div>
-
-                    <img
-                      src={pro.src}
-                      style={{ width: '100%', borderRadius: '10px' }}
-                    />
-                    {pro.description}
-                    <ul>
-                      {pro.activities.map((act, idxx) => (
-                        <li key={idxx}>{act}</li>
-                      ))}
-                    </ul>
-                    <hr />
-                    <div>
-                      {Object.keys(pro.technologies).map((tech, idxxx) => (
-                        <div key={idxxx}>
-                          {(
-                            pro.technologies[
-                              tech as keyof Technologies
-                            ] as string[]
-                          ).toString()}
-                        </div>
-                      ))}
-                    </div>
+                      <LanguageIcon />
+                    </IconButton>
                   </div>
-                ))}
+                  <img
+                    src={pro.src}
+                    style={{ width: '100%', borderRadius: '10px' }}
+                  />
+                  {pro.description}
+                  <ul>
+                    {pro.activities.map((act, idxx) => (
+                      <li key={idxx}>{act}</li>
+                    ))}
+                  </ul>
+                  <hr />
+                  <div>
+                    {Object.keys(pro.technologies).map((tech, idxxx) => (
+                      <div key={idxxx}>{pro.technologies[tech].toString()}</div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </Box>
+            <Pagination
+              count={
+                (selectedFeature.title === 'Professional'
+                  ? professional
+                  : selectedFeature.title === 'Personal Projects'
+                  ? personal_projects
+                  : internships_courses
+                ).length
+              }
+              size='large'
+              onChange={(_e, pg) => {
+                console.log(pg);
+                setPage(pg);
+              }}
+              page={page}
+            />
           </Card>
         </Grid>
       </Grid>
+      <Divider />
     </Container>
   );
 }
