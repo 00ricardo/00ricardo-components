@@ -1,13 +1,14 @@
 .text-sphere {
-    color: #fff;
-
+  color: #fff;
 }
 
 .text-sphere:hover {
-    color: #00FFDC;
-
+  color: #00ffdc;
 }
 
 .tagcloud--item {
-    background-color: blue;
+  background-color: blue;
+}
+.tagcloud {
+  width: 100% !important;
 }

@@ -92,7 +92,7 @@ export default function Skills({ type }) {
                     />
                   </ListItem>
                   <ListItem style={{ display: 'flex', gap: '0.3rem' }}>
-                    <BundlerIcon />
+                    <DataModelIcon />
                     <ListItemText
                       primary='Performance and Bundler
             size optimizations'

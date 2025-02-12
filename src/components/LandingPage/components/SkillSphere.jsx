@@ -11,7 +11,6 @@ export default function SkillSphere() {
         marginBottom: '10px',
         textAlign: 'center',
         display: 'flex',
-        minWidth: '600px',
         margin: '0 auto',
         justifyContent: 'center',
       }}
