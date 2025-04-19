@@ -6,6 +6,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      //external: ['@tiptap/suggestion'],
+    },
   },
   plugins: [react(), visualizer({ open: false, gzipSize: true })],
 });

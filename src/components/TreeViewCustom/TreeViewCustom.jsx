@@ -1,84 +1,101 @@
-import React, { useState, useMemo } from 'react';
-import FormGroup from '@mui/material/FormGroup';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { VariableSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import Box from '@mui/material/Box';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Button from '@mui/material/Button';
-import { FixedSizeList as List } from 'react-window';
+const DEFAULT_ROW_HEIGHT = 30;
+// ! VirtualizedTreeView is was created upon "react-window" and "react-virtualized-auto-sizer"
+// ! RichTreeView from MUI doesn't support virtualization meaning that, for big lists, a lot of DOM elements
+// ! had been created which caused a lot of performance issues (the whole component is rendered)
+// ! Virtual lists improves performance since, only "visible" nodes are rendered into the DOM
+const VirtualizedTreeView = ({ items }) => {
+  // ! State to keep track of expanded items in the tree view
+  const [expandedItems, setExpandedItems] = useState([]);
+  // ! Creating a reference to access the List component (used for manipulating the virtual list)
+  const listRef = useRef();
+  // ! Reference to keep track of individual row heights in the list
+  // ! This reference is important becaue we will be updating the heigh according to expanded nodes
+  const rowHeights = useRef({});
 
-const TreeViewCustom = ({ items, selectedItems, multiSelect }) => {
-  const [itemsSelected, setItemsSelected] = useState(new Set(selectedItems));
-
-  const handleSelection = (idx) => {
-    const newSelection = new Set(itemsSelected);
-    if (newSelection.has(idx)) newSelection.delete(idx);
-    else newSelection.add(idx);
-    setItemsSelected(newSelection);
+  // ! Handle changes in expanded items (when a user expands or collapses a tree node)
+  const handleExpandedItemsChange = (event, itemIds) => {
+    setExpandedItems(itemIds);
   };
 
-  const selectAll = () => {
-    setItemsSelected(new Set(items.map((_, idx) => idx))); // Add all indices to the selected set
+  // ! This function returns the size (height) of an individual row based on the index
+  const getItemSize = (index) =>
+    rowHeights.current[index] || DEFAULT_ROW_HEIGHT;
+
+  // ! This function updates the row height for a specific row at the given index
+  const updateRowHeight = (index, size) => {
+    rowHeights.current[index] = size;
+    listRef.current?.resetAfterIndex(index); // Re-render from index
   };
 
-  const deselectAll = () => {
-    setItemsSelected(new Set()); // Clear all selections
+  // ! Function to calculate the total height of a node, including expanded child nodes
+  // ! The function only runs for "visible" nodes
+  const calculateHeight = (index) => {
+    const item = items[index];
+
+    // ! If the item is expanded, calculate additional height for child nodes
+    if (expandedItems.includes(item.id) && item.children) {
+      item.children.forEach((child, childIndex) => {
+        height += DEFAULT_ROW_HEIGHT; // Recursive call for child items
+      });
+    }
+
+    return height;
   };
 
-  const renderedItems = useMemo(
-    () =>
-      items.map((item, idx) => {
-        const isChecked = itemsSelected.has(idx);
-        return (
-          <Box key={idx} sx={{ display: 'flex', alignItems: 'center' }}>
-            {isChecked ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isChecked}
-                  onChange={() => handleSelection(idx)}
-                />
-              }
-              label={`Label ${idx}`}
-            />
-          </Box>
-        );
-      }),
-    [items, itemsSelected]
-  );
-
-  // Virtualized List Component
+  // ! The Row component is responsible for rendering each row (tree node)
   const Row = ({ index, style }) => {
-    return <div style={style}>{renderedItems[index]}</div>;
+    const ref = useCallback(
+      (node) => {
+        if (node) {
+          const height = calculateHeight(index); //! Recalculate height based on expanded state
+          if (height !== rowHeights.current[index]) {
+            updateRowHeight(index, height);
+          }
+        }
+      },
+      [index, expandedItems] //! Update when expandedItems change
+    );
+
+    return (
+      <div style={{ ...style, padding: 4 }} ref={ref}>
+        <RichTreeView
+          items={[items[index]]}
+          multiSelect
+          checkboxSelection
+          expandedItems={expandedItems}
+          onExpandedItemsChange={handleExpandedItemsChange}
+        />
+      </div>
+    );
   };
+  // ! re-render the list from index 0 whenever expandedItems changes
+  useEffect(() => {
+    // ! Force recalculation of heights whenever expandedItems change
+    listRef.current?.resetAfterIndex(0); // ! Start recalculation from the top
+  }, [expandedItems]);
 
   return (
-    <FormGroup>
-      <Box sx={{ mb: 2 }}>
-        {/* Add buttons for Select All and Deselect All */}
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={selectAll}
-          sx={{ mr: 1 }}
-        >
-          Select All
-        </Button>
-        <Button variant='contained' color='secondary' onClick={deselectAll}>
-          Deselect All
-        </Button>
-      </Box>
-      <List
-        height={400} // Adjust for the viewport height
-        itemCount={items.length}
-        itemSize={40} // Height of each row in pixels
-        width='100%'
-      >
-        {Row}
-      </List>
-    </FormGroup>
+    <Box sx={{ height: 600, width: '100%' }}>
+      <AutoSizer>
+        {({ height, width }) => (
+          <List
+            ref={listRef} //! Attach the reference to the list so we can call its methods later
+            height={height} //! Set the height of the list
+            itemCount={items.length} //! Set the total number of items (rows) in the list
+            itemSize={getItemSize} //! Provide the function to determine each row's height
+            width={width} //! Set the width of the list
+          >
+            {Row}
+          </List>
+        )}
+      </AutoSizer>
+    </Box>
   );
 };
 
-export default TreeViewCustom;
+export default VirtualizedTreeView;
