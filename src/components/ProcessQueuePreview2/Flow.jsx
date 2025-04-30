@@ -1,5 +1,5 @@
 // src/components/Flow.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactFlow, {
   Background,
   Controls,
@@ -18,8 +18,6 @@ import {
   BLUE,
   GREEN,
   GREY,
-  GREY_DISABLED,
-  GREY_HOVER,
   LIGHT_GREY,
   ORANGE,
   RED_ERROR,
@@ -51,8 +49,6 @@ const initialNodes = [
       sourcePosition: Position.Top,
       targetPosition: Position.Top,
       bottomTarget: true,
-      rightTarget: true,
-      leftTarget: true,
     },
   },
   {
@@ -116,7 +112,6 @@ const initialNodes = [
     },
   },
 ];
-
 const initialEdges = [
   {
     id: '1->2',
@@ -124,7 +119,10 @@ const initialEdges = [
     target: '2',
     type: 'animated',
     style: { stroke: ORANGE },
-    data: { label: 'INITIAL_REQUEST (1)' },
+    data: {
+      label: 'INITIAL_REQUEST (1)',
+      step: 1,
+    },
     targetHandle: 'bottomTarget',
   },
   {
@@ -135,6 +133,7 @@ const initialEdges = [
     style: { stroke: GREY },
     data: {
       label: 'CHANGE_REQUEST (2)',
+      step: 2,
 
       moveToTop: true,
       moveToLeft: true,
@@ -151,6 +150,7 @@ const initialEdges = [
     style: { stroke: GREY },
     data: {
       label: 'CHANGE_REQUEST (2)',
+      step: 2,
 
       moveToTop: true,
       moveToLeft: true,
@@ -167,6 +167,7 @@ const initialEdges = [
     style: { stroke: GREY },
     data: {
       label: 'CHANGE_REQUEST (2)',
+      step: 2,
 
       moveToTop: true,
       moveToLeft: true,
@@ -183,6 +184,7 @@ const initialEdges = [
     style: { stroke: GREY },
     data: {
       label: 'CHANGE_REQUEST (2)',
+      step: 2,
 
       moveToTop: true,
       moveToLeft: true,
@@ -199,6 +201,8 @@ const initialEdges = [
     style: { stroke: YELLOW },
     data: {
       label: 'SYNC_REQUEST (3)',
+      step: 3,
+
       moveToTop: true,
       moveToLeft: true,
       topVal: -40,
@@ -214,6 +218,7 @@ const initialEdges = [
     style: { stroke: BLUE },
     data: {
       label: 'SYNC_REQUEST (3)',
+      step: 3,
 
       moveToTop: true,
       moveToLeft: true,
@@ -230,6 +235,7 @@ const initialEdges = [
     style: { stroke: GREEN },
     data: {
       label: 'SYNC_REQUEST (3)',
+      step: 3,
 
       moveToTop: true,
       moveToLeft: true,
@@ -246,6 +252,7 @@ const initialEdges = [
     style: { stroke: RED_ERROR },
     data: {
       label: 'SYNC_REQUEST (3)',
+      step: 3,
 
       moveToTop: true,
       moveToLeft: true,
@@ -262,6 +269,8 @@ const initialEdges = [
     style: { stroke: GREY },
     data: {
       label: 'SYNC_RESPONSE (4)',
+      step: 4,
+
       moveToLeft: true,
       moveToTop: true,
       topVal: 20,
@@ -276,6 +285,8 @@ const initialEdges = [
     style: { stroke: GREY },
     data: {
       label: 'SYNC_RESPONSE (4)',
+      step: 4,
+
       moveToTop: true,
       moveToLeft: true,
       topVal: 80,
@@ -290,6 +301,8 @@ const initialEdges = [
     style: { stroke: GREY },
     data: {
       label: 'SYNC_RESPONSE (4)',
+      step: 4,
+
       moveToTop: true,
       moveToLeft: true,
       topVal: 80,
@@ -304,7 +317,7 @@ const initialEdges = [
     style: { stroke: GREY },
     data: {
       label: 'SYNC_RESPONSE (4)',
-
+      step: 4,
       moveToLeft: true,
       moveToTop: true,
       topVal: 20,
@@ -312,14 +325,26 @@ const initialEdges = [
     },
   },
 ];
-
 const edgeTypes = {
   animated: AnimatedEdge,
 };
 
 export default function Flow() {
+  const [activeStep, setActiveStep] = useState(0);
   const [nodes] = useNodesState(initialNodes);
-  const [edges] = useEdgesState(initialEdges);
+  const [edges, setEdges] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    setEdges((eds) =>
+      eds.map((edge) => ({
+        ...edge,
+        data: {
+          ...edge.data,
+          activeStep: activeStep + 1,
+        },
+      }))
+    );
+  }, [activeStep]);
 
   return (
     <div style={{ width: '100%', height: '100vh' }}>
@@ -344,7 +369,7 @@ export default function Flow() {
             zIndex: 10,
           }}
         >
-          <FlowStepper />
+          <FlowStepper activeStep={activeStep} setActiveStep={setActiveStep} />
         </div>
       </ReactFlow>
     </div>

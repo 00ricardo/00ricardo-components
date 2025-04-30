@@ -14,8 +14,6 @@ const exampleContent = '';
 
 function fileListToImageFiles(fileList) {
   // You may want to use a package like attr-accept
-  // (https://www.npmjs.com/package/attr-accept) to restrict to certain file
-  // types.
   return Array.from(fileList).filter((file) => {
     const mimeType = (file.type || '').toLowerCase();
     return mimeType.startsWith('image/');
@@ -34,26 +32,19 @@ const blobToBase64 = async (file) => {
 };
 
 export default function Editor() {
+  const [submittedContent, setSubmittedContent] = useState('');
+  const [isEditable, setIsEditable] = useState(true);
+  const [showMenuBar, setShowMenuBar] = useState(true);
+
   const extensions = useExtensions({
     placeholder: 'Add the release content here...',
   });
   const rteRef = useRef(null);
-  const [isEditable, setIsEditable] = useState(true);
-  const [showMenuBar, setShowMenuBar] = useState(true);
 
   const handleNewImageFiles = useCallback(async (files, insertPosition) => {
     if (!rteRef.current?.editor) {
       return;
     }
-
-    // For the sake of a demo, we don't have a server to upload the files to,
-    // so we'll instead convert each one to a local "temporary" object URL.
-    // This will not persist properly in a production setting. You should
-    // instead upload the image files to your server, or perhaps convert the
-    // images to bas64 if you would like to encode the image data directly
-    // into the editor content, though that can make the editor content very
-    // large. You will probably want to use the same upload function here as
-    // for the MenuButtonImageUpload `onUploadFiles` prop.
 
     const base64Files = await Promise.all(
       files.map(async (file) => {
@@ -127,17 +118,10 @@ export default function Editor() {
     [handleNewImageFiles]
   );
 
-  const [submittedContent, setSubmittedContent] = useState('');
-
   return (
     <>
       <Box
         sx={{
-          // An example of how editor styles can be overridden. In this case,
-          // setting where the scroll anchors to when jumping to headings. The
-          // scroll margin isn't built in since it will likely vary depending on
-          // where the editor itself is rendered (e.g. if there's a sticky nav
-          // bar on your site).
           '& .ProseMirror': {
             '& h1, & h2, & h3, & h4, & h5, & h6': {
               scrollMarginTop: showMenuBar ? 50 : 0,
@@ -159,16 +143,10 @@ export default function Editor() {
           }}
           renderControls={() => <EditorMenuControls />}
           RichTextFieldProps={{
-            // The "outlined" variant is the default (shown here only as
-            // example), but can be changed to "standard" to remove the outlined
-            // field border from the editor
             variant: 'outlined',
             MenuBarProps: {
               hide: !showMenuBar,
             },
-            // Below is an example of adding a toggle within the outlined field
-            // for showing/hiding the editor menu bar, and a "submit" button for
-            // saving/viewing the HTML content
             footer: (
               <Stack
                 direction='row'
@@ -230,7 +208,12 @@ export default function Editor() {
           </pre>
           <Box mt={3}>
             <RichTextReadOnly
-              content={submittedContent}
+              content={`<p>Hello LDS Community. 
+        Today we're bringing a new feature which aims to avoid redudant mavericks 
+        being reported into the system. This was something that, mainly 
+        <strong>BE OS</strong> sites reported.</p>
+        <img src="https://www.bigfootdigital.co.uk/wp-content/uploads/2020/07/image-optimisation-scaled.jpg" />
+`}
               extensions={extensions}
             />
           </Box>

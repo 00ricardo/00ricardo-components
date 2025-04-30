@@ -1,6 +1,6 @@
 import React from 'react';
 import { getBezierPath } from 'reactflow';
-import { GREY_HOVER, WHITE } from './colors';
+import { GREY_HOVER, WHITE, ORANGE, YELLOW } from './colors';
 
 const AnimatedEdge = ({
   id,
@@ -23,28 +23,35 @@ const AnimatedEdge = ({
     targetPosition,
   });
 
-  const { label, moveToTop, moveToLeft, topVal, leftVal } = data;
+  const { label, moveToTop, moveToLeft, topVal, leftVal, step, activeStep } =
+    data;
+  const highlighEdge = step === activeStep;
+  const processFinished = activeStep === 5;
   return (
     <g>
-      <path
-        id={id}
-        style={{ ...style, strokeWidth: 2 }}
-        className='react-flow__edge-path'
-        d={edgePath}
-        markerEnd={markerEnd}
-      />
-      {label && (
+      {(highlighEdge || processFinished) && (
+        <path
+          id={id}
+          style={{ ...style, strokeWidth: 2 }}
+          className='react-flow__edge-path'
+          d={edgePath}
+          markerEnd={markerEnd}
+        />
+      )}
+      {label && (highlighEdge || processFinished) && (
         <>
           <defs>
-            <filter x='0' y='0' width='1' height='1' id='solid'>
-              <feFlood floodColor={GREY_HOVER} />
-              <feComposite in='SourceGraphic' operator='xor' />
-            </filter>
+            <defs>
+              <filter x='0' y='0' width='1' height='1' id={`solid-${id}`}>
+                <feFlood floodColor={highlighEdge ? ORANGE : GREY_HOVER} />
+                <feComposite in='SourceGraphic' operator='xor' />
+              </filter>
+            </defs>
           </defs>
           <text
             x={moveToLeft ? labelX - leftVal : labelX}
             y={moveToTop ? labelY - topVal : labelY}
-            filter='url(#solid)'
+            filter={`url(#solid-${id})`}
             fontSize='10'
             textAnchor='middle'
             pointerEvents={'none'}
@@ -69,11 +76,17 @@ const AnimatedEdge = ({
         </>
       )}
       {/* Moving dot along the edge */}
-      <circle r={5} fill={style.stroke}>
-        <animateMotion dur='2s' repeatCount='indefinite' rotate='auto'>
-          <mpath href={`#${id}`} />
-        </animateMotion>
-      </circle>
+      {(highlighEdge || processFinished) && (
+        <circle r={5} fill={style.stroke}>
+          <animateMotion
+            dur={highlighEdge || processFinished ? '2s' : '0s'}
+            repeatCount='indefinite'
+            rotate='auto'
+          >
+            <mpath href={`#${id}`} />
+          </animateMotion>
+        </circle>
+      )}
     </g>
   );
 };
