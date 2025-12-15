@@ -19947,6 +19947,5 @@ export const Init = {
     items: MUI_X_PRODUCTS,
     selectedItems: [1, 2, 5],
     expandedItems: [],
-    multiSelect: true,
   },
 };

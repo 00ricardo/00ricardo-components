@@ -7,11 +7,6 @@ import React, {
 } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 // Use a fixed row height for simplicity and stable virtualization
 const DEFAULT_ROW_HEIGHT = 48;
@@ -80,16 +75,6 @@ const VirtualizedTreeView = ({ items = [] }) => {
     [nodeMap]
   );
 
-  // Check whether any descendant node is disabled. If true,
-  // Helper to determine whether a node is disabled.
-  const isNodeDisabled = useCallback((n) => {
-    if (!n) return false;
-    if (n.disabled === true) return true;
-    // Keep compatibility with any ad-hoc disabled rules used in UI
-    if (n.id === 'sliders-child-238731') return true;
-    return false;
-  }, []);
-
   // Handle checkbox change: selecting a parent selects all descendants; unselect removes them
   const handleCheckboxChange = useCallback(
     (id, checked) => {
@@ -98,23 +83,15 @@ const VirtualizedTreeView = ({ items = [] }) => {
         const descendants = getDescendantIds(id);
         if (checked) {
           next.add(id);
-          // Add only non-disabled descendants
-          for (const d of descendants) {
-            const dn = nodeMap.get(d);
-            if (!isNodeDisabled(dn)) next.add(d);
-          }
+          for (const d of descendants) next.add(d);
         } else {
           next.delete(id);
-          // Remove only non-disabled descendants
-          for (const d of descendants) {
-            const dn = nodeMap.get(d);
-            if (!isNodeDisabled(dn)) next.delete(d);
-          }
+          for (const d of descendants) next.delete(d);
         }
         return next;
       });
     },
-    [getDescendantIds, nodeMap, isNodeDisabled]
+    [getDescendantIds]
   );
 
   // Single fixed-height row renderer
@@ -124,7 +101,7 @@ const VirtualizedTreeView = ({ items = [] }) => {
     const isExpanded = expandedItems.includes(node.id);
     const label = node.label || node.name || node.id;
     const checked = selectedIds.has(node.id);
-    const disabled = node.id === 'sliders-child-238731';
+
     return (
       <div
         style={{
@@ -134,37 +111,37 @@ const VirtualizedTreeView = ({ items = [] }) => {
           paddingLeft: 8 + depth * 16,
           boxSizing: 'border-box',
           borderBottom: '1px solid rgba(0,0,0,0.04)',
-          backgroundColor: disabled ? '#ffead8' : 'inherit',
         }}
       >
         {hasChildren ? (
-          <IconButton
-            size='small'
+          <button
             aria-label={isExpanded ? 'collapse' : 'expand'}
             onClick={() => toggleExpanded(node.id)}
-            sx={{ width: 28, height: 28 }}
+            style={{
+              width: 28,
+              height: 28,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+            }}
           >
-            {isExpanded ? (
-              <ExpandMoreIcon fontSize='small' />
-            ) : (
-              <ChevronRightIcon fontSize='small' />
-            )}
-          </IconButton>
+            {isExpanded ? '▾' : '▸'}
+          </button>
         ) : (
           <div style={{ width: 28 }} />
         )}
 
-        <Checkbox
-          size='small'
-          sx={{ marginRight: 1 }}
+        <input
+          type='checkbox'
+          style={{ marginRight: 12 }}
           checked={checked}
           onChange={(e) => handleCheckboxChange(node.id, e.target.checked)}
-          disabled={disabled}
         />
 
-        <Typography variant='body2' component='div' noWrap>
-          {label}
-        </Typography>
+        <div style={{ lineHeight: 1 }}>{label}</div>
       </div>
     );
   };

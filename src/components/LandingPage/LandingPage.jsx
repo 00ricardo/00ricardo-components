@@ -7,6 +7,7 @@ import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Footer from './components/Footer';
 import getLPTheme from './getLPTheme';
+
 // * Signals
 export default function LandingPage() {
   const LPtheme = createTheme(getLPTheme('dark'));
