@@ -120,7 +120,6 @@ const Timeline = () => {
           return (
             <Step key={s.id}>
               <StepLabel
-                StepIconComponent={eventMapping[s.event_code].icon}
                 optional={
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography variant='caption' color='error'>
@@ -131,6 +130,9 @@ const Timeline = () => {
                     </Typography>
                   </div>
                 }
+                slots={{
+                  stepIcon: eventMapping[s.event_code].icon
+                }}
               >
                 {replaceMetadata(
                   eventMapping[s.event_code].main_description,

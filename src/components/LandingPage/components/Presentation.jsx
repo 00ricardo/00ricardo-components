@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Hidden from '@mui/material/Hidden';
 import me from '../assets/me.png';
 import Typewriter from 'typewriter-effect';
 import CV from '../assets/RicardoBriceñoCV.pdf';
@@ -92,19 +91,17 @@ export default function Presentation() {
               )}
             </Stack>
           </div>
-          <Hidden only={['xs', 'sm', 'md']}>
-            <img
-              style={{
-                filter: 'drop-shadow(0px 0px 35px rgba(255, 255, 255, 0.25))',
-                width: '35%',
-                height: '35%',
-                borderRadius: '50%',
-              }}
-              src={me}
-              alt={'Ricardo Briceño'}
-              loading='lazy'
-            />
-          </Hidden>
+          <img
+            style={{
+              filter: 'drop-shadow(0px 0px 35px rgba(255, 255, 255, 0.25))',
+              width: '35%',
+              height: '35%',
+              borderRadius: '50%',
+            }}
+            src={me}
+            alt={'Ricardo Briceño'}
+            loading='lazy'
+          />
         </Stack>
         <Box
           sx={() => ({

@@ -15,6 +15,7 @@ export default function ControlledAccordions() {
   return (
     <div className='block'>
       <Accordion
+        slotProps={{ heading: { component: 'h4' } }}
         expanded={expanded === 'panel1'}
         onChange={handleChange('panel1')}
       >

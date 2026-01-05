@@ -26,9 +26,11 @@ export default function HelperDialog({
     <Fragment>
       <Dialog
         open={openHelperDialog}
-        TransitionComponent={Transition}
         keepMounted
         onClose={() => setOpenHelperDialog(false)}
+        slots={{
+          transition: Transition
+        }}
       >
         <DialogTitle sx={{ backgroundColor: '#282828', color: '#fff' }}>
           What does this graph mean?
