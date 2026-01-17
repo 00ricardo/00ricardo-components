@@ -8,7 +8,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ReactIcon from './ReactIcon';
 import ReduxIcon from './ReduxIcon';
-import BundlerIcon from './BundlerIcon';
+import ChameleonIcon from './ChameleonIcon';
+import MagnifyingIcon from './MagnifyingIcon';
+import KnowledgeIcon from './KnowledgeIcon';
 import PerformanceIcon from './PerformanceIcon';
 import BatchProcessingIcon from './BatchProcessingIcon';
 import PortugueseIcon from './PortugueseIcon';
@@ -71,7 +73,7 @@ export default function Skills({ type }) {
                   </ListItem>
                   <ListItem style={{ display: 'flex', gap: '0.3rem' }}>
                     <DataModelIcon />
-                    <ListItemText primary='Model and data structure planning' />
+                    <ListItemText primary='Database Design and Data Structure' />
                   </ListItem>
                 </List>
               </div>
@@ -101,6 +103,29 @@ export default function Skills({ type }) {
                   <ListItem style={{ display: 'flex', gap: '0.3rem' }}>
                     <ReduxIcon />
                     <ListItemText primary='Sagas and Redux for global state managament' />
+                  </ListItem>
+                </List>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  maxWidth: 'auto',
+                }}
+              >
+                <Typography>Development Strengths</Typography>
+                <List dense={true}>
+                  <ListItem style={{ display: 'flex', gap: '0.3rem' }}>
+                    <MagnifyingIcon />
+                    <ListItemText primary='Strong attention to detail' />
+                  </ListItem>
+                  <ListItem style={{ display: 'flex', gap: '0.3rem' }}>
+                    <KnowledgeIcon />
+                    <ListItemText primary='Deep and analytical understanding of problems, code and requirements' />
+                  </ListItem>
+                  <ListItem style={{ display: 'flex', gap: '0.3rem' }}>
+                    <ChameleonIcon />
+                    <ListItemText primary='Literally a Chameleon - High ability to adapt' />
                   </ListItem>
                 </List>
               </div>

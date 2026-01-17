@@ -59,7 +59,7 @@ export default function Experience() {
 
   return (
     <Container id='projects' sx={{ py: { xs: 8, sm: 16 } }}>
-      <Grid container spacing={6}>
+      <Grid container spacing={6} sx={{ flexWrap: 'nowrap' }}>
         <Grid item xs={12} md={6}>
           <div>
             <Typography component='h2' variant='h4' color='text.primary'>
@@ -127,7 +127,6 @@ export default function Experience() {
             justifyContent='center'
             alignItems='flex-start'
             spacing={2}
-            useFlexGap
             sx={{ width: '100%', display: { xs: 'none', sm: 'flex' } }}
           >
             {items.map(({ icon, title, description, more }, index) => (
@@ -248,6 +247,7 @@ export default function Experience() {
                   key={idx}
                   style={{
                     paddingRight: 50,
+                    paddingLeft: 15,
                     display: page === idx + 1 ? 'block' : 'none',
                   }}
                 >

@@ -3,7 +3,7 @@ import { ThemeOptions, alpha } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
 import { PaletteMode } from '@mui/material';
 
-declare module '@mui/material/styles/createPalette' {
+declare module '@mui/material/styles' {
   interface ColorRange {
     50: string;
     100: string;
@@ -153,7 +153,6 @@ const getDesignTokens = (mode: PaletteMode) => ({
     },
   },
   typography: {
-    fontFamily: ['"Inter", "sans-serif"'].join(','),
     h1: {
       fontSize: 60,
       fontWeight: 600,
